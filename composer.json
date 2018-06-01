@@ -10,7 +10,6 @@
   },
   "require": {
     "laravel/framework": "^5.0",
-    "doctrine/dbal": "^2.5",
-    // "Krlove/code-generator": "^1.0"
+    "doctrine/dbal": "^2.5"
   }
 }
