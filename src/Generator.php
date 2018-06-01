@@ -33,6 +33,8 @@ class Generator
     }
 
     /**
+     * Generate model that will be used to generate the eloquent class - added ability to check for duplicate methods
+     * for cases where same table is referenced more than once
      * @param Config $config
      * @return ClassModel
      * @throws GeneratorException
@@ -41,7 +43,48 @@ class Generator
     {
         $this->registerUserTypes($config);
 
-        $model   = $this->builder->createModel($config);
+        $model = $this->builder->createModel($config);
+
+        //recheck if the methods are unique
+        $existing_methods = $model->getMethods();
+
+        if(!empty($existing_methods) && count($existing_methods) > 1 )
+        {
+            $unique_method_names = array();
+
+            foreach($existing_methods as $index => $method)
+            {
+            $unique_method_names[$index] = $method->getName();
+            }
+
+            $updated_existing_method = array();
+            $unique_method_names = array();
+
+             //we have a problem here
+            foreach($existing_methods as $index => $method)
+            {
+                $current_name = $method->getName();
+                if(!in_array($current_name, $unique_method_names))
+                {
+                    $updated_existing_method[] = $method;
+                }
+                else
+                {
+                    //resolve the problem
+                    $current_name = $method->getName().$index; //resolve it by adding the index as a postfix
+                    $method->setName( $current_name );
+                    $updated_existing_method[] = $method;
+                }
+
+                $unique_method_names[] = $current_name;
+            }
+
+            if(!empty($updated_existing_method))
+            {
+                $model->setMethods($updated_existing_method);
+            }
+        }
+
         $content = $model->render();
 
         $outputPath = $this->resolveOutputPath($config);

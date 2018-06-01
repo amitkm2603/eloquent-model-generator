@@ -198,8 +198,9 @@ class RelationProcessor implements ProcessorInterface
         $reflectionObject = new \ReflectionObject($relation);
         $name             = Str::camel($reflectionObject->getShortName());
 
+        //dropped camel case and added uc first so that the table name matches with the class name
         $arguments = [
-            $model->getNamespace()->getNamespace() . '\\' . Str::singular(Str::studly($relation->getTableName()))
+            $model->getNamespace()->getNamespace() . '\\' . ucfirst($relation->getTableName())
         ];
 
         if ($relation instanceof BelongsToMany) {
@@ -212,32 +213,44 @@ class RelationProcessor implements ProcessorInterface
                 : $relation->getJoinTable();
             $arguments[]          = $joinTableName;
 
-            $arguments[] = $this->resolveArgument(
+            $temp = $this->resolveArgument(
                 $relation->getForeignColumnName(),
                 $this->helper->getDefaultForeignColumnName($model->getTableName())
             );
-            $arguments[] = $this->resolveArgument(
+            $arguments[] = empty($temp)?$relation->getForeignColumnName():$temp;
+
+            $temp =  $this->resolveArgument(
                 $relation->getLocalColumnName(),
                 $this->helper->getDefaultForeignColumnName($relation->getTableName())
             );
+            $arguments[] = empty($temp)?$relation->getLocalColumnName():$temp;
+
         } elseif ($relation instanceof HasMany) {
-            $arguments[] = $this->resolveArgument(
+            $temp = $this->resolveArgument(
                 $relation->getForeignColumnName(),
                 $this->helper->getDefaultForeignColumnName($model->getTableName())
             );
-            $arguments[] = $this->resolveArgument(
+
+            $arguments[] = empty($temp)?$relation->getForeignColumnName():$temp;
+
+            $temp        =  $this->resolveArgument(
                 $relation->getLocalColumnName(),
                 EmgHelper::DEFAULT_PRIMARY_KEY
             );
+            $arguments[] = empty($temp)?$relation->getLocalColumnName():$temp;
+
         } else {
-            $arguments[] = $this->resolveArgument(
+            $temp        = $this->resolveArgument(
                 $relation->getForeignColumnName(),
                 $this->helper->getDefaultForeignColumnName($relation->getTableName())
             );
-            $arguments[] = $this->resolveArgument(
+            $arguments[] = empty($temp)?$relation->getForeignColumnName():$temp;
+
+            $temp        = $this->resolveArgument(
                 $relation->getLocalColumnName(),
                 EmgHelper::DEFAULT_PRIMARY_KEY
             );
+            $arguments[] = empty($temp)?$relation->getLocalColumnName():$temp;
         }
 
         return sprintf('return $this->%s(%s);', $name, $this->prepareArguments($arguments));
