@@ -8,17 +8,19 @@
       "Krlove\\EloquentModelGenerator\\": "src/"
     }
   },
-  "require": {
-    "laravel/framework": "^5.0",
-    "doctrine/dbal": "^2.5",
-    "Krlove/code-generator": "dev-customized"
-  },
 
   "repositories": [
       {
         "type": "vcs",
         "url": "https://github.com/amitkm2603/code-generator"
       }
-    ]
+    ],
+  "require": {
+    "laravel/framework": "^5.0",
+    "doctrine/dbal": "^2.5",
+    "krlove/code-generator": "dev-customized"
+  }
+
+  
 
 }
