@@ -3,29 +3,14 @@
   "description": "Eloquent Model Generator",
   "version": "1.2.6",
   "license": "MIT",
-    "require": {
-    "laravel/framework": "^5.0",
-    "doctrine/dbal": "^2.5",
-    "krlove/code-generator": "dev-customized"
-  },
-
-  "repositories": [
-      {
-        "type": "vcs",
-        "url": "https://github.com/amitkm2603/code-generator"
-      }
-    ],
   "autoload": {
     "psr-4": {
       "Krlove\\EloquentModelGenerator\\": "src/"
     }
   },
-  "config": {
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "optimize-autoloader": true
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
-
+  "require": {
+    "laravel/framework": "^5.0",
+    "doctrine/dbal": "^2.5",
+    // "Krlove/code-generator": "^1.0"
+  }
 }
