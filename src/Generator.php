@@ -81,7 +81,14 @@ class Generator
 
             if(!empty($updated_existing_method))
             {
-                $model->setMethods($updated_existing_method);
+                //reset the methods
+                $model->resetMethods();
+                //add the methods
+                foreach($updated_existing_method as $method)
+                {
+                    $model->addMethod($method);
+                }
+                
             }
         }
 
